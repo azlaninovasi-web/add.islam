@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0f5132"> <title>Perjalanan Menuju Istiqamah</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <link rel="stylesheet" href="style.css">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕌</text></svg>">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-content">
+      <div class="header-text">
+        <h1 class="main-title">Perjalanan Menuju <span>Istiqamah</span></h1>
+        <div class="hijri-date" id="hijriDateDisplay">Memuatkan tarikh...</div>
+      </div>
+      <div class="header-location" id="locationDisplay">
+        <i class="fa-solid fa-location-dot"></i>
+        <span id="locationText">Mengesan lokasi tepat...</span>
+      </div>
+    </div>
+    <div class="header-pattern"></div>
+  </header>
+
+  <main class="main-container">
+
+    <div class="page active" id="page-dashboard">
+      <div class="card prayer-hero-card">
+        <div class="prayer-info">
+          <h3>Solat Seterusnya</h3>
+          <h2 id="nextPrayerName">--</h2>
+          <div class="countdown" id="nextPrayerCountdown">--:--:--</div>
+        </div>
+        <i class="fa-solid fa-mosque bg-icon"></i>
+      </div>
+
+      <div class="menu-grid">
+        <button class="menu-card" onclick="showPage('doa')">
+          <div class="menu-icon"><i class="fa-solid fa-hands-praying"></i></div>
+          <span class="menu-text">Doa</span>
+        </button>
+        <button class="menu-card" onclick="showPage('tasbih')">
+          <div class="menu-icon"><i class="fa-solid fa-gem"></i></div>
+          <span class="menu-text">Tasbih</span>
+        </button>
+        <button class="menu-card" onclick="showPage('checklist')">
+          <div class="menu-icon"><i class="fa-solid fa-list-check"></i></div>
+          <span class="menu-text">Senarai Semak</span>
+        </button>
+        <button class="menu-card disabled" onclick="showToast('Ensaiklopedia akan datang!')">
+          <div class="menu-icon"><i class="fa-solid fa-book-quran"></i></div>
+          <span class="menu-text">Ensaiklopedia</span>
+          <span class="badge-coming-soon">Akan Datang</span>
+        </button>
+      </div>
+      
+      <div class="score-mini-card" onclick="showPage('checklist')">
+        <div class="score-info">
+          <span class="score-title">Mata Terkumpul</span>
+          <strong id="dashTotalScore">0</strong>
+        </div>
+        <div class="score-badge" id="dashRewardBadge">🌱 Permulaan</div>
+      </div>
+    </div>
+
+    <div class="page" id="page-doa">
+      <button class="back-btn" onclick="showPage('dashboard')"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+      <div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+      <div class="doa-grid-container" id="doaGrid">
+        </div>
+    </div>
+
+    <div class="page" id="page-tasbih">
+      <button class="back-btn" onclick="showPage('dashboard')"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+      <div class="card tasbih-card">
+        <div class="card-header">
+          <i class="fa-solid fa-hand-sparkles"></i>
+          <h2>Tasbih Digital</h2>
+        </div>
+        <div class="tasbih-dhikr-selector" id="dhikrSelector">
+          <button class="dhikr-btn active" data-dhikr="subhanallah">Subhanallah</button>
+          <button class="dhikr-btn" data-dhikr="alhamdulillah">Alhamdulillah</button>
+          <button class="dhikr-btn" data-dhikr="allahuakbar">Allahuakbar</button>
+        </div>
+        <div class="tasbih-arabic" id="tasbihArabic">سُبْحَانَ اللَّهِ</div>
+        <div class="tasbih-target">Sasaran: <strong id="targetDisplay">33</strong> kali</div>
+        <div class="tasbih-counter-ring">
+          <svg viewBox="0 0 200 200" class="progress-ring">
+            <circle cx="100" cy="100" r="88" fill="none" stroke="#e8f5f0" stroke-width="6"/>
+            <circle cx="100" cy="100" r="88" fill="none" stroke="var(--accent)" stroke-width="6" stroke-linecap="round" id="progressCircle" stroke-dasharray="0 552.9" transform="rotate(-90 100 100)"/>
+          </svg>
+          <div class="counter-content">
+            <span class="counter-number" id="counterDisplay">0</span>
+            <span class="counter-label">kali</span>
+          </div>
+        </div>
+        <button class="tasbih-btn" id="tasbihButton" onclick="countTasbih()">
+          <i class="fa-solid fa-fan"></i><br>
+          <span style="font-size: 0.8rem">SENTUH</span>
+        </button>
+        <div class="tasbih-controls">
+          <button class="ctrl-btn" onclick="resetTasbih()"><i class="fa-solid fa-arrow-rotate-left"></i> Reset</button>
+          <button class="ctrl-btn" onclick="changeTarget()"><i class="fa-solid fa-sliders"></i> Sasaran</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="page" id="page-checklist">
+      <button class="back-btn" onclick="showPage('dashboard')"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+      <div class="score-card">
+        <div class="score-label">Jumlah Mata</div>
+        <div class="score-number" id="totalScore">0</div>
+        <div class="score-today">Poin Hari Ini: <strong id="todayScore">0</strong></div>
+        <div class="reward-badge" id="rewardBadge">🌱 Permulaan</div>
+      </div>
+      
+      <div class="checklist-section" id="checklistContainer">
+        </div>
+
+      <div class="heart-container">
+        <div class="heart-label">Carta Hati (40 Hari)</div>
+        <div class="heart-progress">
+          <div class="heart-icon" id="heartIcon">🤍</div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="heartProgressFill"></div>
+          </div>
+          <span class="heart-streak" id="heartStreakText">0/40</span>
+        </div>
+        <p class="heart-desc" style="font-size: 0.7rem; color: var(--text-muted); margin-top: 10px;">Penuhi tugasan harian penuh selama 40 hari untuk hati yang bersinar.</p>
+      </div>
+    </div>
+
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
