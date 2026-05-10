@@ -51,7 +51,7 @@ body {
 /* ===== HEADER (STICKY, IMEJ green.png, TIADA BORDER-RADIUS) ===== */
 .header {
   /* Gunakan imej green.png */
-  background: url('green.png') no-repeat center center / cover;
+  background: url('green.jpg') no-repeat center center / cover;
   background-color: var(--primary);
   
   color: white;
