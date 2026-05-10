@@ -1,15 +1,15 @@
 /* ===== style.css ===== */
 
 :root {
-  --primary: #0f5132; /* Hijau Islamik Gelap */
-  --primary-light: #198754; /* Hijau Islamik Terang */
+  --primary: #0f5132;
+  --primary-light: #198754;
   --accent: #20c997;
   --accent-glow: #28ebd0;
   --gold: #d4af37;
   --gold-soft: #f1e5ac;
   --bg: #f4f9f5;
   --bg-card: #ffffff;
-  --doa-bg: #e8f5e9; /* Hijau muda untuk kad doa */
+  --doa-bg: #e8f5e9; /* Hijau muda */
   --text: #1e2b2c;
   --text-soft: #5f6c6d;
   --text-muted: #8a9798;
@@ -39,7 +39,7 @@ body {
   color: var(--text);
   min-height: 100vh;
   overflow-x: hidden;
-  padding-bottom: 30px; /* Dikurangkan kerana tiada lagi bottom-nav */
+  padding-bottom: 30px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
@@ -48,35 +48,25 @@ body {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 
-/* ===== HEADER (DASHBOARD) DENGAN IMEJ green.jpg ===== */
+/* ===== HEADER (STICKY, IMEJ green.png, TIADA BORDER-RADIUS) ===== */
 .header {
-  /* TUKAR: Menggunakan imej green.jpg sebagai latar belakang */
-  background: url('green.jpg') no-repeat center center / cover;
-  
-  /* Pastikan imej stretch dengan cantik, warna hijau gelap sebagai fallback jika imej gagal dimuat */
+  /* Gunakan imej green.png */
+  background: url('green.png') no-repeat center center / cover;
   background-color: var(--primary);
-
+  
   color: white;
   padding: 35px 22px 40px;
-  position: relative;
-  overflow: hidden;
+  
+  /* STICKY HEADER */
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  
+  /* TIADA BORDER-RADIUS (seperti diminta) */
+  border-radius: 0;
+  
   box-shadow: var(--shadow-md);
 }
-
-/* 
-   NOTA: Corak SVG (header-pattern) tidak lagi diperlukan kerana imej 
-   green.jpg sudah pun mempunyai corak. Kami buang kod tersebut di bawah.
-   Jika anda mahu menggunakan semula, sila nyahkomen.
-*/
-/* .header-pattern {
-  position: absolute;
-  inset: 0;
-  opacity: 0.08;
-  background-image: repeating-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), repeating-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
-  background-position: 0 0, 15px 15px;
-  background-size: 30px 30px;
-  pointer-events: none;
-} */
 
 .header-content {
   position: relative;
@@ -129,9 +119,9 @@ body {
 
 /* ===== MAIN & NAVIGATION ===== */
 .main-container {
-  padding: 16px 14px;
+  padding: 24px 14px 16px;
   max-width: 480px;
-  margin: -25px auto 0;
+  margin: 0 auto;
   position: relative;
   z-index: 5;
 }
@@ -169,68 +159,143 @@ body {
 }
 .back-btn:hover { background: #f5f9f8; }
 
-/* ===== CARDS (UMUM) ===== */
-.card {
-  background: var(--bg-card);
-  border-radius: var(--radius-xl);
-  padding: 22px 18px;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border);
-  transition: var(--transition);
-}
-
-.card-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 18px;
-}
-
-.card-header i {
-  font-size: 1.2rem;
-  color: var(--primary-light);
-  background: var(--doa-bg);
-  padding: 8px;
-  border-radius: 12px;
-}
-
-.card-header h2 {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--primary);
-}
-
-/* ===== MENU DASHBOARD GAMIFIKASI ===== */
+/* ===== CARD WAKTU SOLAT (HIJAU CAIR) ===== */
 .prayer-hero-card {
-  background: white;
+  /* Warna hijau cair */
+  background: var(--doa-bg); /* #e8f5e9 */
+  
   border-radius: var(--radius-xl);
-  padding: 24px 20px;
+  padding: 20px 18px;
   margin-bottom: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  margin-top: 8px;
   box-shadow: var(--shadow-md);
   position: relative;
   overflow: hidden;
   border: 1px solid var(--border);
 }
 
-.prayer-info { position: relative; z-index: 2; }
-.prayer-info h3 { font-size: 0.85rem; color: var(--text-soft); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-.prayer-info h2 { font-size: 2.2rem; color: var(--primary); margin: 4px 0; font-weight: 700; line-height: 1.1; }
-.prayer-hero-card .countdown { font-size: 1rem; font-weight: 600; color: var(--primary-light); margin-top: 0; text-align: left;}
+.prayer-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+}
 
+.prayer-header h3 {
+  font-size: 1rem;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.prayer-header h3 i {
+  margin-right: 8px;
+}
+
+.countdown-wrapper {
+  background: white;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: var(--text-soft);
+  box-shadow: var(--shadow-sm);
+}
+
+.countdown-wrapper strong {
+  color: var(--primary);
+  margin-left: 6px;
+}
+
+.prayer-times-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  position: relative;
+  z-index: 2;
+}
+
+.prayer-time-item {
+  background: white;
+  border-radius: var(--radius-md);
+  padding: 10px 4px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  transition: var(--transition);
+}
+
+.prayer-time-item.next-prayer {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+  transform: scale(1.05);
+  box-shadow: var(--shadow-md);
+}
+
+.prayer-time-item .prayer-name {
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-soft);
+  display: block;
+}
+
+.prayer-time-item.next-prayer .prayer-name {
+  color: white;
+}
+
+.prayer-time-item .prayer-time {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text);
+  display: block;
+}
+
+.prayer-time-item.next-prayer .prayer-time {
+  color: white;
+}
+
+.prayer-time-item .prayer-icon {
+  font-size: 1rem;
+  margin-bottom: 4px;
+  color: var(--primary-light);
+}
+
+.prayer-time-item.next-prayer .prayer-icon {
+  color: white;
+}
+
+/* Elemen latar belakang masjid */
 .bg-icon {
   position: absolute;
   right: -15px;
   bottom: -25px;
   font-size: 7.5rem;
-  opacity: 0.04;
+  opacity: 0.08;
   color: var(--primary);
   z-index: 1;
   transform: rotate(-10deg);
 }
 
+/* Responsif untuk grid solat */
+@media (max-width: 400px) {
+  .prayer-times-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+  }
+  .prayer-time-item {
+    padding: 6px 2px;
+  }
+  .prayer-time-item .prayer-name {
+    font-size: 0.6rem;
+  }
+  .prayer-time-item .prayer-time {
+    font-size: 0.7rem;
+  }
+}
+
+/* ===== MENU DASHBOARD ===== */
 .menu-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -324,7 +389,7 @@ body {
   border: 1px solid #c3e6cb;
 }
 
-/* ===== KAD DOA SERAGAM (SAMA TINGGI) ===== */
+/* ===== DOA ===== */
 .bismillah {
   font-family: var(--font-arabic);
   font-size: 1.8rem;
@@ -338,7 +403,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  align-items: stretch; /* Memastikan setiap elemen melar mengikut tinggi optimum */
+  align-items: stretch;
 }
 
 .doa-card {
@@ -349,12 +414,11 @@ body {
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
-  height: 100%; /* Kunci untuk ketinggian yang sama dalam grid */
+  height: 100%;
   position: relative;
   overflow: hidden;
 }
 
-/* Corak Ornamen Islamik di Latar Belakang */
 .doa-card::before {
   content: '';
   position: absolute;
@@ -384,13 +448,13 @@ body {
 .arabic {
   font-family: var(--font-arabic);
   font-size: 1.7rem;
-  font-weight: 700; /* Tulisan Bold */
-  color: #000000; /* Hitam pekat */
+  font-weight: 700;
+  color: #000000;
   text-align: center;
   line-height: 2.2;
   direction: rtl;
   margin-bottom: 20px;
-  flex-grow: 1; /* Menolak kandungan ke bawah untuk ketinggian sama rata */
+  flex-grow: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -656,7 +720,7 @@ body {
 
 .counter-value { font-weight: 600; min-width: 24px; text-align: center; font-size: 0.95rem; color: var(--primary); }
 
-/* ===== CARTA HATI 40 HARI ===== */
+/* ===== CARTA HATI ===== */
 .heart-container {
   background: white;
   border-radius: var(--radius-xl);
