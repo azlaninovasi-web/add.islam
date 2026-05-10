@@ -32,18 +32,27 @@
         <span id="locationText">Mengesan lokasi tepat...</span>
       </div>
     </div>
-    <!-- BUANG: Elemen header-pattern telah dikeluarkan -->
   </header>
 
   <main class="main-container">
 
     <div class="page active" id="page-dashboard">
-      <div class="card prayer-hero-card">
-        <div class="prayer-info">
-          <h3>Solat Seterusnya</h3>
-          <h2 id="nextPrayerName">--</h2>
-          <div class="countdown" id="nextPrayerCountdown">--:--:--</div>
+      <!-- CARD WAKTU SOLAT (HIJAU CAIR) -->
+      <div class="card prayer-hero-card" id="prayerTimesCard">
+        <div class="prayer-header">
+          <h3><i class="fa-solid fa-clock"></i> Waktu Solat Hari Ini</h3>
+          <div class="next-prayer-info">
+            <span>Solat Seterusnya:</span>
+            <strong id="nextPrayerName">--</strong>
+            <span>dalam</span>
+            <strong id="nextPrayerCountdown">--:--:--</strong>
+          </div>
         </div>
+        
+        <div class="prayer-times-grid" id="prayerTimesGrid">
+          <!-- Akan disuntik oleh JavaScript -->
+        </div>
+        
         <i class="fa-solid fa-mosque bg-icon"></i>
       </div>
 

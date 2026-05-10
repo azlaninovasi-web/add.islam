@@ -62,7 +62,7 @@ body {
   top: 0;
   z-index: 999;
   
-  /* TIADA BORDER-RADIUS (seperti diminta) */
+  /* TIADA BORDER-RADIUS */
   border-radius: 0;
   
   box-shadow: var(--shadow-md);
@@ -192,19 +192,26 @@ body {
   margin-right: 8px;
 }
 
-.countdown-wrapper {
+/* --- TAMBAHAN: GAYA UNTUK NEXT-PRAYER-INFO --- */
+.next-prayer-info {
   background: white;
-  padding: 6px 16px;
+  padding: 8px 16px;
   border-radius: 20px;
   font-size: 0.85rem;
   color: var(--text-soft);
   box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.countdown-wrapper strong {
+.next-prayer-info strong {
   color: var(--primary);
-  margin-left: 6px;
 }
+
+/* -------------------------------------------- */
 
 .prayer-times-grid {
   display: grid;
