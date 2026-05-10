@@ -314,7 +314,7 @@ body {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(63, 63, 63, 0.6); /* Hijau lutsinar */
+  
   z-index: 0;
   border-radius: var(--radius-xl);
 }
