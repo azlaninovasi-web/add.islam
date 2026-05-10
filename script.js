@@ -1,4 +1,4 @@
-// ===== script.js (Kemas Kini Penuh) =====
+// ===== script.js (Kemas Kini – Waktu Solat Tepat) =====
 
 // ---------- APP STATE ----------
 const APP = {
@@ -36,16 +36,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ---------- NAVIGATION ----------
 function showPage(pageId) {
-  // Sembunyikan semua page
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  // Paparkan page sasaran
   const targetPage = document.getElementById(`page-${pageId}`);
   if (targetPage) targetPage.classList.add('active');
 
   APP.currentPage = pageId;
   window.scrollTo(0,0);
 
-  // Trigger spesifik ikut page
   if (pageId === 'checklist') {
     renderChecklist();
     updateScoreAndHeart();
@@ -65,7 +62,7 @@ function setHijriDate() {
   }
 }
 
-// ---------- LOKASI TEPAT & SOLAT ----------
+// ---------- LOKASI & SOLAT ----------
 function getLocation() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
@@ -87,7 +84,6 @@ function getLocation() {
 
 async function reverseGeocode(lat, lng) {
   try {
-    // API OpenStreetMap untuk lokasi tepat (City, State)
     const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=14&accept-language=ms`);
     const data = await res.json();
     const addr = data.address || {};
@@ -107,20 +103,67 @@ async function reverseGeocode(lat, lng) {
 
 async function fetchPrayerTimes(lat, lng) {
   try {
-    // ✅ Format tarikh YYYY-MM-DD
     const dateStr = APP.currentDate.toISOString().split('T')[0];
-    // ✅ Method 17 – Singapore (20° Subuh, 18° Isyak) paling tepat untuk Malaysia
+    // ✅ Method 17 = Singapore (Subuh 20°, Isyak 18°) – paling tepat untuk Malaysia
     const res = await fetch(`https://api.aladhan.com/v1/timings/${dateStr}?latitude=${lat}&longitude=${lng}&method=17`);
     const data = await res.json();
     if (data.code === 200) {
       prayerTimesToday = data.data.timings;
+      
+      // Paparkan grid 5 waktu solat
+      renderPrayerTimes();
+      
+      // Kira countdown untuk solat seterusnya
       calculateNextPrayer();
     }
   } catch (e) {
-    document.getElementById('nextPrayerName').textContent = "Ralat jadual";
+    console.error('Ralat memuat waktu solat:', e);
   }
 }
 
+// ---------- PAMERAN 5 WAKTU SOLAT (GRID HIJAU CAIR) ----------
+function renderPrayerTimes() {
+  if (!prayerTimesToday.Fajr) return;
+  const grid = document.getElementById('prayerTimesGrid');
+  if (!grid) return;
+  
+  const prayers = [
+    { name: 'Subuh', time: prayerTimesToday.Fajr, icon: 'fa-sun' },
+    { name: 'Zohor', time: prayerTimesToday.Dhuhr, icon: 'fa-sun' },
+    { name: 'Asar', time: prayerTimesToday.Asr, icon: 'fa-sun' },
+    { name: 'Maghrib', time: prayerTimesToday.Maghrib, icon: 'fa-sun' },
+    { name: 'Isyak', time: prayerTimesToday.Isha, icon: 'fa-moon' }
+  ];
+
+  const now = new Date();
+  let nextIndex = -1;
+  for (let i = 0; i < prayers.length; i++) {
+    let [h, m] = prayers[i].time.split(':');
+    let pTime = new Date();
+    pTime.setHours(parseInt(h), parseInt(m), 0, 0);
+    if (pTime > now) {
+      nextIndex = i;
+      break;
+    }
+  }
+  if (nextIndex === -1) nextIndex = 0; // Subuh esok
+
+  let html = '';
+  prayers.forEach((p, index) => {
+    const isNext = (index === nextIndex);
+    html += `
+      <div class="prayer-time-item ${isNext ? 'next-prayer' : ''}">
+        <i class="fa-solid ${p.icon} prayer-icon"></i>
+        <span class="prayer-name">${p.name}</span>
+        <span class="prayer-time">${p.time}</span>
+        ${isNext ? '<div style="font-size: 0.6rem; margin-top: 2px; opacity: 0.9;">⬅ Seterusnya</div>' : ''}
+      </div>
+    `;
+  });
+  grid.innerHTML = html;
+}
+
+// ---------- COUNTDOWN (SOLAT SETERUSNYA) ----------
 function calculateNextPrayer() {
   if (!prayerTimesToday.Fajr) return;
   const now = new Date();
@@ -143,9 +186,7 @@ function calculateNextPrayer() {
     }
   }
 
-  // Jika semua solat harini dah lepas, set Subuh esok
   if (!next) {
-    // ✅ Guna prayers[0] (waktu Subuh) untuk esok
     let [h, m] = prayers[0].time.split(':');
     let pTime = new Date();
     pTime.setDate(pTime.getDate() + 1);
@@ -153,25 +194,27 @@ function calculateNextPrayer() {
     next = { name: 'Subuh (Esok)', timeObj: pTime };
   }
 
-  document.getElementById('nextPrayerName').textContent = next.name;
+  const nameElement = document.getElementById('nextPrayerName');
+  if (nameElement) nameElement.textContent = next.name;
 
-  // Clear existing interval if any
   if (APP.countdownInterval) clearInterval(APP.countdownInterval);
 
-  // Kira detik (Countdown)
   APP.countdownInterval = setInterval(() => {
     const diff = next.timeObj - new Date();
     if (diff <= 0) { 
       clearInterval(APP.countdownInterval);
-      fetchPrayerTimes(APP.locationLat, APP.locationLng); // Refresh jadual
+      fetchPrayerTimes(APP.locationLat, APP.locationLng);
       return; 
     }
     const hrs = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     const secs = Math.floor((diff % (1000 * 60)) / 1000);
     
-    document.getElementById('nextPrayerCountdown').textContent = 
-      `${String(hrs).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+    const countdownElement = document.getElementById('nextPrayerCountdown');
+    if (countdownElement) {
+      countdownElement.textContent = 
+        `${String(hrs).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+    }
   }, 1000);
 }
 
@@ -217,14 +260,12 @@ function playTTS(btnElement, textToRead) {
     return;
   }
   
-  // Jika sedang main, kita hentikan
   if (btnElement.classList.contains('playing')) {
     window.speechSynthesis.cancel();
     resetAudioBtn(btnElement);
     return;
   }
   
-  // Hentikan sebarang bacaan lain
   window.speechSynthesis.cancel();
   document.querySelectorAll('.audio-btn.playing').forEach(b => resetAudioBtn(b));
 
@@ -279,7 +320,6 @@ function resetTasbih() {
 }
 
 function changeTarget() {
-  // ✅ Array sasaran yang sah
   const targets = [33, 100, 500];
   const currentIndex = targets.indexOf(APP.tasbihTarget);
   APP.tasbihTarget = targets[(currentIndex + 1) % targets.length];
@@ -389,7 +429,6 @@ function updateScoreAndHeart() {
   const todayKey = getDateKey();
   const maxScorePerDay = 8; // 5 solat + 1 istiqfar(>=3) + 2 selawat(>=7)
 
-  // Gelung untuk kira semua data sejarah
   Object.entries(APP.checklistData).forEach(([date, data]) => {
     let pts = 0;
     if (data.subuh) pts += 1;
@@ -402,36 +441,22 @@ function updateScoreAndHeart() {
     
     totalPoints += pts;
     
-    if (date === todayKey) {
-      todayPoints = pts;
-    }
-
-    if (pts === maxScorePerDay) {
-      fullDays += 1;
-    }
+    if (date === todayKey) todayPoints = pts;
+    if (pts === maxScorePerDay) fullDays += 1;
   });
 
-  // Update UI Mata
-  const elDashTotal = document.getElementById('dashTotalScore');
-  const elTotalScore = document.getElementById('totalScore');
-  const elTodayScore = document.getElementById('todayScore');
-  
-  if (elDashTotal) elDashTotal.textContent = totalPoints;
-  if (elTotalScore) elTotalScore.textContent = totalPoints;
-  if (elTodayScore) elTodayScore.textContent = todayPoints;
+  document.getElementById('dashTotalScore') && (document.getElementById('dashTotalScore').textContent = totalPoints);
+  document.getElementById('totalScore') && (document.getElementById('totalScore').textContent = totalPoints);
+  document.getElementById('todayScore') && (document.getElementById('todayScore').textContent = todayPoints);
 
-  // Lencana (Badge)
   let badge = '🌱 Permulaan';
   if (totalPoints >= 200) badge = '🌟 Mujahid';
   else if (totalPoints >= 100) badge = '💪 Pejuang';
   else if (totalPoints >= 50) badge = '🌿 Istiqamah';
   
-  const elDashBadge = document.getElementById('dashRewardBadge');
-  const elRewardBadge = document.getElementById('rewardBadge');
-  if (elDashBadge) elDashBadge.textContent = badge;
-  if (elRewardBadge) elRewardBadge.textContent = badge;
+  document.getElementById('dashRewardBadge') && (document.getElementById('dashRewardBadge').textContent = badge);
+  document.getElementById('rewardBadge') && (document.getElementById('rewardBadge').textContent = badge);
 
-  // Carta Hati UI (Maksimum 40)
   const percent = Math.min((fullDays / 40) * 100, 100);
   const heartIcon = document.getElementById('heartIcon');
   const progressFill = document.getElementById('heartProgressFill');
