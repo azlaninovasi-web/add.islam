@@ -1,4 +1,4 @@
-// ===== script.js (Kemas Kini – Waktu Solat Tepat) =====
+// ===== script.js (Kemas Kini – Waktu Solat Tepat JAKIM) =====
 
 // ---------- APP STATE ----------
 const APP = {
@@ -103,9 +103,16 @@ async function reverseGeocode(lat, lng) {
 
 async function fetchPrayerTimes(lat, lng) {
   try {
-    const dateStr = APP.currentDate.toISOString().split('T')[0];
-    // ✅ Method 17 = Singapore (Subuh 20°, Isyak 18°) – paling tepat untuk Malaysia
-    const res = await fetch(`https://api.aladhan.com/v1/timings/${dateStr}?latitude=${lat}&longitude=${lng}&method=17`);
+    const dateStr = APP.currentDate.toISOString().split('T');
+    
+    // PENYELESAIAN WAKTU SOLAT JAKIM:
+    // 1. method=99 : Membenarkan tetapan sudut kustom.
+    // 2. methodSettings=18,null,18 : Sudut Subuh 18° dan Isyak 18° (Piawaian terkini JAKIM 2020+).
+    // 3. tune=0,1,0,2,1,1,1,1,0 : Minit Ihtiyat (Waktu Berjaga-jaga JAKIM). 
+    //    Susunan: Imsak(+0), Subuh(+1), Syuruk(+0), Zohor(+2), Asar(+1), Maghrib(+1), Sunset(+1), Isyak(+1), Midnight(+0)
+    const apiUrl = `https://api.aladhan.com/v1/timings/${dateStr}?latitude=${lat}&longitude=${lng}&method=99&methodSettings=18,null,18&tune=0,1,0,2,1,1,1,1,0`;
+    
+    const res = await fetch(apiUrl);
     const data = await res.json();
     if (data.code === 200) {
       prayerTimesToday = data.data.timings;
@@ -187,7 +194,7 @@ function calculateNextPrayer() {
   }
 
   if (!next) {
-    let [h, m] = prayers[0].time.split(':');
+    let [h, m] = prayers.time.split(':');
     let pTime = new Date();
     pTime.setDate(pTime.getDate() + 1);
     pTime.setHours(parseInt(h), parseInt(m), 0, 0);
@@ -320,7 +327,7 @@ function resetTasbih() {
 }
 
 function changeTarget() {
-  const targets = [33, 100, 500];
+  const targets =''; // <- Masukkan semula di sini
   const currentIndex = targets.indexOf(APP.tasbihTarget);
   APP.tasbihTarget = targets[(currentIndex + 1) % targets.length];
   document.getElementById('targetDisplay').textContent = APP.tasbihTarget;
