@@ -1,4 +1,4 @@
-// ===== script.js =====
+// ===== script.js (Kemas Kini Penuh) =====
 
 // ---------- APP STATE ----------
 const APP = {
@@ -107,69 +107,20 @@ async function reverseGeocode(lat, lng) {
 
 async function fetchPrayerTimes(lat, lng) {
   try {
-    const dateStr = APP.currentDate.toISOString().split('T')[0]; // Dapatkan tarikh sahaja
-    const res = await fetch(`https://api.aladhan.com/v1/timings/${dateStr}?latitude=${lat}&longitude=${lng}&method=11`);
+    // ✅ Format tarikh YYYY-MM-DD
+    const dateStr = APP.currentDate.toISOString().split('T')[0];
+    // ✅ Method 17 – Singapore (20° Subuh, 18° Isyak) paling tepat untuk Malaysia
+    const res = await fetch(`https://api.aladhan.com/v1/timings/${dateStr}?latitude=${lat}&longitude=${lng}&method=17`);
     const data = await res.json();
     if (data.code === 200) {
       prayerTimesToday = data.data.timings;
-      
-      // Paparkan 5 waktu solat
-      renderPrayerTimes();
-      
-      // Kira countdown untuk solat seterusnya
       calculateNextPrayer();
     }
   } catch (e) {
-    console.error('Ralat memuat waktu solat:', e);
+    document.getElementById('nextPrayerName').textContent = "Ralat jadual";
   }
 }
 
-// ---------- PAMERAN 5 WAKTU SOLAT (GRID HIJAU CAIR) ----------
-function renderPrayerTimes() {
-  if (!prayerTimesToday.Fajr) return;
-  const grid = document.getElementById('prayerTimesGrid');
-  if (!grid) return;
-  
-  const prayers = [
-    { name: 'Subuh', time: prayerTimesToday.Fajr, icon: 'fa-sun' },
-    { name: 'Zohor', time: prayerTimesToday.Dhuhr, icon: 'fa-sun' },
-    { name: 'Asar', time: prayerTimesToday.Asr, icon: 'fa-sun' },
-    { name: 'Maghrib', time: prayerTimesToday.Maghrib, icon: 'fa-sun' },
-    { name: 'Isyak', time: prayerTimesToday.Isha, icon: 'fa-moon' }
-  ];
-
-  // Tentukan waktu seterusnya
-  const now = new Date();
-  let nextIndex = -1;
-  for (let i = 0; i < prayers.length; i++) {
-    let [h, m] = prayers[i].time.split(':');
-    let pTime = new Date();
-    pTime.setHours(parseInt(h), parseInt(m), 0, 0);
-    if (pTime > now) {
-      nextIndex = i;
-      break;
-    }
-  }
-  // Jika tiada, set Subuh esok
-  if (nextIndex === -1) nextIndex = 0;
-
-  // Suntik HTML
-  let html = '';
-  prayers.forEach((p, index) => {
-    const isNext = (index === nextIndex);
-    html += `
-      <div class="prayer-time-item ${isNext ? 'next-prayer' : ''}">
-        <i class="fa-solid ${p.icon} prayer-icon"></i>
-        <span class="prayer-name">${p.name}</span>
-        <span class="prayer-time">${p.time}</span>
-        ${isNext ? '<div style="font-size: 0.6rem; margin-top: 2px; opacity: 0.9;">⬅ Seterusnya</div>' : ''}
-      </div>
-    `;
-  });
-  grid.innerHTML = html;
-}
-
-// ---------- COUNTDOWN (SOLAT SETERUSNYA) ----------
 function calculateNextPrayer() {
   if (!prayerTimesToday.Fajr) return;
   const now = new Date();
@@ -194,6 +145,7 @@ function calculateNextPrayer() {
 
   // Jika semua solat harini dah lepas, set Subuh esok
   if (!next) {
+    // ✅ Guna prayers[0] (waktu Subuh) untuk esok
     let [h, m] = prayers[0].time.split(':');
     let pTime = new Date();
     pTime.setDate(pTime.getDate() + 1);
@@ -201,9 +153,7 @@ function calculateNextPrayer() {
     next = { name: 'Subuh (Esok)', timeObj: pTime };
   }
 
-  // --- KEMASKINI: Paparkan NAMA solat seterusnya ---
-  const nameElement = document.getElementById('nextPrayerName');
-  if (nameElement) nameElement.textContent = next.name;
+  document.getElementById('nextPrayerName').textContent = next.name;
 
   // Clear existing interval if any
   if (APP.countdownInterval) clearInterval(APP.countdownInterval);
@@ -213,19 +163,15 @@ function calculateNextPrayer() {
     const diff = next.timeObj - new Date();
     if (diff <= 0) { 
       clearInterval(APP.countdownInterval);
-      // Refresh jadual
-      fetchPrayerTimes(APP.locationLat, APP.locationLng);
+      fetchPrayerTimes(APP.locationLat, APP.locationLng); // Refresh jadual
       return; 
     }
     const hrs = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     const secs = Math.floor((diff % (1000 * 60)) / 1000);
     
-    const countdownElement = document.getElementById('nextPrayerCountdown');
-    if (countdownElement) {
-      countdownElement.textContent = 
-        `${String(hrs).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
-    }
+    document.getElementById('nextPrayerCountdown').textContent = 
+      `${String(hrs).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
   }, 1000);
 }
 
@@ -333,6 +279,7 @@ function resetTasbih() {
 }
 
 function changeTarget() {
+  // ✅ Array sasaran yang sah
   const targets = [33, 100, 500];
   const currentIndex = targets.indexOf(APP.tasbihTarget);
   APP.tasbihTarget = targets[(currentIndex + 1) % targets.length];
