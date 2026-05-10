@@ -1,4 +1,4 @@
-// ===== script.js (Kemas Kini – Waktu Solat Tepat JAKIM) =====
+// ===== script.js (Kemas Kini – Waktu Solat Tepat JAKIM & Gambar Latar Doa) =====
 
 // ---------- APP STATE ----------
 const APP = {
@@ -241,21 +241,36 @@ async function fetchDoaData() {
   renderDoaGrid();
 }
 
+// ---------- RENDER DOA GRID (KEMASKINI: GAMBAR LATAR DOA & KETERBACAAN TEKS) ----------
 function renderDoaGrid() {
   const container = document.getElementById('doaGrid');
   if (!container) return;
   container.innerHTML = '';
   
   doaData.forEach(doa => {
+    // Gunakan stail inline untuk background image pada doa-card (imej: doa.png)
+    const cardStyle = `background-image: url('doa.png'); background-size: cover; background-position: center; position: relative; color: white;`;
+    
+    // Tambahkan overlay gelap pada card untuk memastikan teks boleh dibaca
+    const overlayStyle = `position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.4); border-radius: 12px; z-index: 1;`;
+    
+    // Pastikan teks diletakkan di atas overlay
+    const contentStyle = `position: relative; z-index: 2; color: white;`;
+
+    // Buat HTML dengan stail inline
     container.innerHTML += `
-      <div class="doa-card">
-        <div class="doa-title"><i class="fa-solid fa-star"></i> ${doa.title}</div>
-        <div class="arabic">${doa.arabic}</div>
-        <div class="translation">${doa.translation}</div>
-        <div class="source"><i class="fa-solid fa-book"></i> ${doa.source}</div>
-        <button class="audio-btn" onclick="playTTS(this, '${doa.arabic.replace(/'/g, "\\'")}')" style="margin-top: 15px;">
-          <i class="fa-solid fa-volume-high"></i> Dengar Bacaan
-        </button>
+      <div class="doa-card" style="${cardStyle}">
+        <div class="doa-card-overlay" style="${overlayStyle}"></div>
+        
+        <div class="doa-card-content" style="${contentStyle}">
+            <div class="doa-title" style="color: white; font-weight: bold; border-bottom-color: rgba(255,255,255,0.2);">${doa.title}</div>
+            <div class="arabic" style="color: white; font-size: 1.3rem;">${doa.arabic}</div>
+            <div class="translation" style="color: #f1f1f1; font-style: italic;">${doa.translation}</div>
+            <div class="source" style="color: #ddd;"><i class="fa-solid fa-book"></i> ${doa.source}</div>
+            <button class="audio-btn" onclick="playTTS(this, '${doa.arabic.replace(/'/g, "\\'")}')" style="margin-top: 15px; border-color: white; color: white; background-color: rgba(255, 255, 255, 0.2);">
+              <i class="fa-solid fa-volume-high"></i> Dengar Bacaan
+            </button>
+        </div>
       </div>
     `;
   });
@@ -327,7 +342,7 @@ function resetTasbih() {
 }
 
 function changeTarget() {
-  const targets =''; // <- Masukkan semula di sini
+  const targets ='';
   const currentIndex = targets.indexOf(APP.tasbihTarget);
   APP.tasbihTarget = targets[(currentIndex + 1) % targets.length];
   document.getElementById('targetDisplay').textContent = APP.tasbihTarget;

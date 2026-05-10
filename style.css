@@ -50,21 +50,14 @@ body {
 
 /* ===== HEADER (STICKY, IMEJ green.png, TIADA BORDER-RADIUS) ===== */
 .header {
-  /* Gunakan imej green.png */
   background: url('green.png') no-repeat center center / cover;
   background-color: var(--primary);
-  
   color: white;
   padding: 35px 22px 40px;
-  
-  /* STICKY HEADER */
   position: sticky;
   top: 0;
   z-index: 999;
-  
-  /* TIADA BORDER-RADIUS */
   border-radius: 0;
-  
   box-shadow: var(--shadow-md);
 }
 
@@ -161,9 +154,7 @@ body {
 
 /* ===== CARD WAKTU SOLAT (HIJAU CAIR) ===== */
 .prayer-hero-card {
-  /* Warna hijau cair */
-  background: var(--doa-bg); /* #e8f5e9 */
-  
+  background: var(--doa-bg);
   border-radius: var(--radius-xl);
   padding: 20px 18px;
   margin-bottom: 20px;
@@ -192,7 +183,6 @@ body {
   margin-right: 8px;
 }
 
-/* --- TAMBAHAN: GAYA UNTUK NEXT-PRAYER-INFO --- */
 .next-prayer-info {
   background: white;
   padding: 8px 16px;
@@ -210,8 +200,6 @@ body {
 .next-prayer-info strong {
   color: var(--primary);
 }
-
-/* -------------------------------------------- */
 
 .prayer-times-grid {
   display: grid;
@@ -248,9 +236,7 @@ body {
   display: block;
 }
 
-.prayer-time-item.next-prayer .prayer-name {
-  color: white;
-}
+.prayer-time-item.next-prayer .prayer-name { color: white; }
 
 .prayer-time-item .prayer-time {
   font-weight: 700;
@@ -259,9 +245,7 @@ body {
   display: block;
 }
 
-.prayer-time-item.next-prayer .prayer-time {
-  color: white;
-}
+.prayer-time-item.next-prayer .prayer-time { color: white; }
 
 .prayer-time-item .prayer-icon {
   font-size: 1rem;
@@ -269,11 +253,8 @@ body {
   color: var(--primary-light);
 }
 
-.prayer-time-item.next-prayer .prayer-icon {
-  color: white;
-}
+.prayer-time-item.next-prayer .prayer-icon { color: white; }
 
-/* Elemen latar belakang masjid */
 .bg-icon {
   position: absolute;
   right: -15px;
@@ -285,21 +266,11 @@ body {
   transform: rotate(-10deg);
 }
 
-/* Responsif untuk grid solat */
 @media (max-width: 400px) {
-  .prayer-times-grid {
-    grid-template-columns: repeat(5, 1fr);
-    gap: 4px;
-  }
-  .prayer-time-item {
-    padding: 6px 2px;
-  }
-  .prayer-time-item .prayer-name {
-    font-size: 0.6rem;
-  }
-  .prayer-time-item .prayer-time {
-    font-size: 0.7rem;
-  }
+  .prayer-times-grid { grid-template-columns: repeat(5, 1fr); gap: 4px; }
+  .prayer-time-item { padding: 6px 2px; }
+  .prayer-time-item .prayer-name { font-size: 0.6rem; }
+  .prayer-time-item .prayer-time { font-size: 0.7rem; }
 }
 
 /* ===== MENU DASHBOARD ===== */
@@ -369,6 +340,45 @@ body {
   letter-spacing: 0.5px;
 }
 
+/* ===== KAD MENU DOA (DASHBOARD) BACKGROUND ===== */
+#menu-doa {
+  background-image: url('doa.png');
+  background-size: cover;
+  background-position: center;
+  border: none;
+  justify-content: center; /* Tambah ini supaya teks berada tepat di tengah */
+}
+
+/* Lapisan overlay gelap supaya teks & ikon jelas dibaca */
+#menu-doa::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 1;
+}
+
+/* Pastikan ikon dan teks berada di atas lapisan overlay */
+#menu-doa .menu-icon,
+#menu-doa .menu-text {
+  position: relative;
+  z-index: 2;
+}
+
+/* Hiaskan ikon dengan latar lutsinar (kesan kaca) */
+#menu-doa .menu-icon {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Tukar warna teks 'Doa' kepada putih */
+#menu-doa .menu-text {
+  color: white;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
 .score-mini-card {
   background: white;
   border-radius: var(--radius-md);
@@ -396,7 +406,7 @@ body {
   border: 1px solid #c3e6cb;
 }
 
-/* ===== DOA ===== */
+/* ===== DOA (DIKEMAS KINI UNTUK GAMBAR LATAR BELAKANG) ===== */
 .bismillah {
   font-family: var(--font-arabic);
   font-size: 1.8rem;
@@ -413,50 +423,56 @@ body {
   align-items: stretch;
 }
 
+/* Reka Bentuk Utama Kad Doa Bersama Imej */
 .doa-card {
-  background-color: var(--doa-bg);
-  border: 1px solid #c3e6cb;
+  background-image: url('doa.png');
+  background-size: cover;
+  background-position: center;
   border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+  border: none; /* Buang border hijau lama */
+  /* Buang padding dari sini supaya overlay tutup seluruh kad */
+}
+
+/* Overlay Gelap Untuk Kontras Teks */
+.doa-card-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.55); /* Gelap sedikit untuk menonjolkan teks putih */
+  z-index: 1;
+}
+
+/* Kandungan Kad Doa */
+.doa-card-content {
+  position: relative;
+  z-index: 2;
   padding: 24px 20px;
-  box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
   height: 100%;
-  position: relative;
-  overflow: hidden;
-}
-
-.doa-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  opacity: 0.05;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l14.5 14.5L60 30 44.5 44.5 30 60 15.5 44.5 0 30 15.5 15.5z' fill='%230f5132' fill-rule='evenodd'/%3E%3C/svg%3E");
-  z-index: 1;
 }
 
 .doa-title {
   font-size: 0.95rem;
   font-weight: 700;
-  color: var(--primary);
+  color: white; /* Teks Putih */
   margin-bottom: 16px;
   display: flex;
   align-items: center;
   gap: 8px;
-  position: relative;
-  z-index: 2;
-  border-bottom: 1px dashed rgba(15,81,50,0.2);
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.3);
   padding-bottom: 10px;
 }
 
-.doa-title i { color: var(--gold); }
+.doa-title i { color: var(--gold); } /* Kekalkan ikon warna keemasan/kuning */
 
 .arabic {
   font-family: var(--font-arabic);
   font-size: 1.7rem;
   font-weight: 700;
-  color: #000000;
+  color: white; /* Teks Putih */
   text-align: center;
   line-height: 2.2;
   direction: rtl;
@@ -465,43 +481,40 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  z-index: 2;
   word-spacing: 2px;
 }
 
 .translation {
   font-size: 0.85rem;
-  color: var(--text-soft);
+  color: rgba(255, 255, 255, 0.85); /* Putih sedikit pudar */
   text-align: center;
   margin-bottom: 16px;
-  position: relative;
-  z-index: 2;
   line-height: 1.6;
   font-style: italic;
 }
 
 .source {
   font-size: 0.75rem;
-  background: white;
-  color: var(--primary);
+  background: rgba(255, 255, 255, 0.15); /* Latar lutsinar */
+  color: white;
   padding: 8px 14px;
   border-radius: 12px;
   text-align: center;
   font-weight: 600;
-  border: 1px solid var(--border);
-  position: relative;
-  z-index: 2;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(4px);
+  margin-bottom: 15px; /* Jarak atas butang audio */
 }
 
+/* Butang Audio Dengan Kesan Kaca (Glassmorphism) */
 .audio-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: var(--primary);
+  background: rgba(255, 255, 255, 0.2); 
+  border: 1px solid rgba(255, 255, 255, 0.4);
   color: white;
-  border: none;
   padding: 12px 18px;
   border-radius: 30px;
   font-size: 0.85rem;
@@ -509,13 +522,16 @@ body {
   font-family: var(--font-ui);
   cursor: pointer;
   transition: var(--transition);
-  position: relative;
-  z-index: 2;
   box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(4px);
 }
 
-.audio-btn:hover { background: var(--primary-light); }
-.audio-btn.playing { background: #d3543a; animation: gentlePulse 1.8s infinite; }
+.audio-btn:hover { background: rgba(255, 255, 255, 0.3); }
+.audio-btn.playing { 
+  background: rgba(211, 84, 58, 0.85); /* Merah pudar jika sedang dimainkan */
+  border-color: transparent; 
+  animation: gentlePulse 1.8s infinite; 
+}
 
 @keyframes gentlePulse {
   0% { transform: scale(1); }
