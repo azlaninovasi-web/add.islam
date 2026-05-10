@@ -9,7 +9,7 @@
   --gold-soft: #f1e5ac;
   --bg: #f4f9f5;
   --bg-card: #ffffff;
-  --doa-bg: #e8f5e9; /* Hijau muda */
+  --doa-bg: #e8f5e9;
   --text: #1e2b2c;
   --text-soft: #5f6c6d;
   --text-muted: #8a9798;
@@ -48,7 +48,7 @@ body {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 
-/* ===== HEADER (STICKY, IMEJ green.png, TIADA BORDER-RADIUS) ===== */
+/* ===== HEADER ===== */
 .header {
   background: url('green.png') no-repeat center center / cover;
   background-color: var(--primary);
@@ -152,7 +152,7 @@ body {
 }
 .back-btn:hover { background: #f5f9f8; }
 
-/* ===== CARD WAKTU SOLAT (HIJAU CAIR) ===== */
+/* ===== PRAYER HERO CARD ===== */
 .prayer-hero-card {
   background: var(--doa-bg);
   border-radius: var(--radius-xl);
@@ -297,6 +297,48 @@ body {
   overflow: hidden;
 }
 
+/* ===== DOA MENU CARD (DASHBOARD) DENGAN GAMBAR ===== */
+#menu-doa {
+  background-image: url('doa1.png');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  border: none;
+  color: white;
+  overflow: hidden;
+  justify-content: center;
+}
+
+/* Overlay gelap supaya teks dan ikon kelihatan jelas */
+#menu-doa::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(63, 63, 63, 0.6); /* Hijau lutsinar */
+  z-index: 0;
+  border-radius: var(--radius-xl);
+}
+
+/* Pastikan ikon dan teks berada di atas overlay */
+#menu-doa .menu-icon,
+#menu-doa .menu-text {
+  position: relative;
+  z-index: 1;
+}
+
+/* Ubah gaya ikon supaya lebih bersinar */
+#menu-doa .menu-icon {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
+  color: white;
+}
+
+/* Warna teks putih */
+#menu-doa .menu-text {
+  color: white;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
 .menu-card:active { transform: scale(0.95); }
 
 .menu-icon {
@@ -340,73 +382,7 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* ===== KAD MENU DOA (DASHBOARD) BACKGROUND ===== */
-#menu-doa {
-  background-image: url('doa.png');
-  background-size: cover;
-  background-position: center;
-  border: none;
-  justify-content: center; /* Tambah ini supaya teks berada tepat di tengah */
-}
-
-/* Lapisan overlay gelap supaya teks & ikon jelas dibaca */
-#menu-doa::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.55);
-  z-index: 1;
-}
-
-/* Pastikan ikon dan teks berada di atas lapisan overlay */
-#menu-doa .menu-icon,
-#menu-doa .menu-text {
-  position: relative;
-  z-index: 2;
-}
-
-/* Hiaskan ikon dengan latar lutsinar (kesan kaca) */
-#menu-doa .menu-icon {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-/* Tukar warna teks 'Doa' kepada putih */
-#menu-doa .menu-text {
-  color: white;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-}
-
-.score-mini-card {
-  background: white;
-  border-radius: var(--radius-md);
-  padding: 16px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border: 1px solid var(--border);
-  cursor: pointer;
-  box-shadow: var(--shadow-sm);
-  transition: var(--transition);
-}
-.score-mini-card:active { transform: scale(0.98); }
-
-.score-info { display: flex; flex-direction: column; }
-.score-title { font-size: 0.75rem; color: var(--text-soft); font-weight: 600; }
-.score-info strong { font-size: 1.6rem; color: var(--primary); line-height: 1; margin-top: 4px; }
-.score-badge {
-  background: var(--doa-bg);
-  color: var(--primary);
-  font-size: 0.85rem;
-  font-weight: 600;
-  padding: 6px 14px;
-  border-radius: 20px;
-  border: 1px solid #c3e6cb;
-}
-
-/* ===== DOA (DIKEMAS KINI UNTUK GAMBAR LATAR BELAKANG) ===== */
+/* ===== DOA (HORIZONTAL SLIDE, SAMA TINGGI, PUSAT TEKS) ===== */
 .bismillah {
   font-family: var(--font-arabic);
   font-size: 1.8rem;
@@ -418,61 +394,78 @@ body {
 
 .doa-grid-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 16px;
   align-items: stretch;
+  overflow-x: auto;
+  padding: 10px 14px 20px 14px;
+  margin: 0 -14px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
 
-/* Reka Bentuk Utama Kad Doa Bersama Imej */
+.doa-grid-container::-webkit-scrollbar {
+  display: none;
+}
+
 .doa-card {
   background-image: url('doa.png');
   background-size: cover;
   background-position: center;
+  background-color: #0f5132; /* Fallback hijau gelap */
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-md);
   position: relative;
   overflow: hidden;
-  border: none; /* Buang border hijau lama */
-  /* Buang padding dari sini supaya overlay tutup seluruh kad */
+  border: none;
+  flex: 0 0 85%;
+  max-width: 360px;
+  scroll-snap-align: center;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Overlay Gelap Untuk Kontras Teks */
 .doa-card-overlay {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background-color: rgba(0, 0, 0, 0.55); /* Gelap sedikit untuk menonjolkan teks putih */
+  background-color: rgba(0, 0, 0, 0.55);
   z-index: 1;
 }
 
-/* Kandungan Kad Doa */
 .doa-card-content {
   position: relative;
   z-index: 2;
   padding: 24px 20px;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex: 1;
+  align-items: center;      /* Pusat mendatar */
+  justify-content: center;  /* Pusat menegak */
+  text-align: center;
 }
 
 .doa-title {
   font-size: 0.95rem;
   font-weight: 700;
-  color: white; /* Teks Putih */
+  color: white;
   margin-bottom: 16px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   border-bottom: 1px dashed rgba(255, 255, 255, 0.3);
   padding-bottom: 10px;
+  width: 100%;
 }
 
-.doa-title i { color: var(--gold); } /* Kekalkan ikon warna keemasan/kuning */
+.doa-title i { color: var(--gold); }
 
 .arabic {
   font-family: var(--font-arabic);
   font-size: 1.7rem;
   font-weight: 700;
-  color: white; /* Teks Putih */
+  color: white;
   text-align: center;
   line-height: 2.2;
   direction: rtl;
@@ -486,7 +479,7 @@ body {
 
 .translation {
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.85); /* Putih sedikit pudar */
+  color: rgba(255, 255, 255, 0.85);
   text-align: center;
   margin-bottom: 16px;
   line-height: 1.6;
@@ -495,7 +488,7 @@ body {
 
 .source {
   font-size: 0.75rem;
-  background: rgba(255, 255, 255, 0.15); /* Latar lutsinar */
+  background: rgba(255, 255, 255, 0.15);
   color: white;
   padding: 8px 14px;
   border-radius: 12px;
@@ -503,16 +496,15 @@ body {
   font-weight: 600;
   border: 1px solid rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(4px);
-  margin-bottom: 15px; /* Jarak atas butang audio */
+  margin-bottom: 15px;
 }
 
-/* Butang Audio Dengan Kesan Kaca (Glassmorphism) */
 .audio-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.2); 
+  background: rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.4);
   color: white;
   padding: 12px 18px;
@@ -527,10 +519,10 @@ body {
 }
 
 .audio-btn:hover { background: rgba(255, 255, 255, 0.3); }
-.audio-btn.playing { 
-  background: rgba(211, 84, 58, 0.85); /* Merah pudar jika sedang dimainkan */
-  border-color: transparent; 
-  animation: gentlePulse 1.8s infinite; 
+.audio-btn.playing {
+  background: rgba(211, 84, 58, 0.85);
+  border-color: transparent;
+  animation: gentlePulse 1.8s infinite;
 }
 
 @keyframes gentlePulse {
@@ -785,6 +777,49 @@ body {
 }
 
 .toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ===== SCORE MINI CARD (DASHBOARD) ===== */
+.score-mini-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 16px 20px;
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.score-mini-card:active { transform: scale(0.97); }
+
+.score-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.score-title {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.score-info strong {
+  font-size: 1.4rem;
+  color: var(--primary);
+}
+
+.score-badge {
+  background: var(--doa-bg);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--primary);
+}
 
 /* ===== RESPONSIVE ===== */
 @media (min-width: 500px) {

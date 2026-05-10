@@ -1,4 +1,4 @@
-// ===== script.js (Kemas Kini – Waktu Solat Tepat JAKIM & Gambar Latar Doa) =====
+// ===== script.js (Kemas Kini – Waktu Solat Tepat JAKIM, Gambar Latar Doa & Pembetulan Ralat) =====
 
 // ---------- APP STATE ----------
 const APP = {
@@ -193,8 +193,9 @@ function calculateNextPrayer() {
     }
   }
 
+  // Pembetulan ralat: guna prayers[0].time untuk waktu Subuh jika semua solat hari ini sudah lepas
   if (!next) {
-    let [h, m] = prayers.time.split(':');
+    let [h, m] = prayers[0].time.split(':');
     let pTime = new Date();
     pTime.setDate(pTime.getDate() + 1);
     pTime.setHours(parseInt(h), parseInt(m), 0, 0);
@@ -241,7 +242,7 @@ async function fetchDoaData() {
   renderDoaGrid();
 }
 
-// ---------- RENDER DOA GRID (KEMASKINI: GAMBAR LATAR DOA & KETERBACAAN TEKS) ----------
+// ---------- RENDER DOA GRID (GAMBAR LATAR DOA & KETERBACAAN TEKS) ----------
 function renderDoaGrid() {
   const container = document.getElementById('doaGrid');
   if (!container) return;
@@ -257,6 +258,9 @@ function renderDoaGrid() {
     // Pastikan teks diletakkan di atas overlay
     const contentStyle = `position: relative; z-index: 2; color: white;`;
 
+    // Escape single quote dalam arabic untuk elak ralat JavaScript
+    const escapedArabic = doa.arabic.replace(/'/g, "\\'");
+    
     // Buat HTML dengan stail inline
     container.innerHTML += `
       <div class="doa-card" style="${cardStyle}">
@@ -267,7 +271,7 @@ function renderDoaGrid() {
             <div class="arabic" style="color: white; font-size: 1.3rem;">${doa.arabic}</div>
             <div class="translation" style="color: #f1f1f1; font-style: italic;">${doa.translation}</div>
             <div class="source" style="color: #ddd;"><i class="fa-solid fa-book"></i> ${doa.source}</div>
-            <button class="audio-btn" onclick="playTTS(this, '${doa.arabic.replace(/'/g, "\\'")}')" style="margin-top: 15px; border-color: white; color: white; background-color: rgba(255, 255, 255, 0.2);">
+            <button class="audio-btn" onclick="playTTS(this, '${escapedArabic}')" style="margin-top: 15px; border-color: white; color: white; background-color: rgba(255, 255, 255, 0.2);">
               <i class="fa-solid fa-volume-high"></i> Dengar Bacaan
             </button>
         </div>
@@ -342,9 +346,12 @@ function resetTasbih() {
 }
 
 function changeTarget() {
-  const targets ='';
+  // Pembetulan: array sasaran yang sah, bukan string kosong
+  const targets = [33, 100, 500];
   const currentIndex = targets.indexOf(APP.tasbihTarget);
-  APP.tasbihTarget = targets[(currentIndex + 1) % targets.length];
+  // Jika sasaran semasa tiada dalam array, mulakan semula dari awal
+  const nextIndex = (currentIndex + 1) % targets.length;
+  APP.tasbihTarget = targets[nextIndex];
   document.getElementById('targetDisplay').textContent = APP.tasbihTarget;
   resetTasbih();
 }

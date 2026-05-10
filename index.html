@@ -36,6 +36,7 @@
 
   <main class="main-container">
 
+    <!-- DASHBOARD -->
     <div class="page active" id="page-dashboard">
       <div class="card prayer-hero-card" id="prayerTimesCard">
         <div class="prayer-header">
@@ -49,23 +50,28 @@
         </div>
         
         <div class="prayer-times-grid" id="prayerTimesGrid">
-          </div>
+          <!-- Akan diisi oleh JavaScript -->
+        </div>
         
         <i class="fa-solid fa-mosque bg-icon"></i>
       </div>
 
       <div class="menu-grid">
+        <!-- Doa: TAMBAH IKON -->
         <button class="menu-card" id="menu-doa" onclick="showPage('doa')">
           <span class="menu-text">Doa</span>
         </button>
+
         <button class="menu-card" onclick="showPage('tasbih')">
           <div class="menu-icon"><i class="fa-solid fa-gem"></i></div>
           <span class="menu-text">Tasbih</span>
         </button>
+
         <button class="menu-card" onclick="showPage('checklist')">
           <div class="menu-icon"><i class="fa-solid fa-list-check"></i></div>
           <span class="menu-text">Senarai Semak</span>
         </button>
+
         <button class="menu-card disabled" onclick="showToast('Ensaiklopedia akan datang!')">
           <div class="menu-icon"><i class="fa-solid fa-book-quran"></i></div>
           <span class="menu-text">Ensaiklopedia</span>
@@ -82,13 +88,16 @@
       </div>
     </div>
 
+    <!-- DOA -->
     <div class="page" id="page-doa">
       <button class="back-btn" onclick="showPage('dashboard')"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
       <div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
       <div class="doa-grid-container" id="doaGrid">
-        </div>
+        <!-- Akan diisi oleh JavaScript -->
+      </div>
     </div>
 
+    <!-- TASBIH -->
     <div class="page" id="page-tasbih">
       <button class="back-btn" onclick="showPage('dashboard')"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
       <div class="card tasbih-card">
@@ -124,6 +133,7 @@
       </div>
     </div>
 
+    <!-- CHECKLIST -->
     <div class="page" id="page-checklist">
       <button class="back-btn" onclick="showPage('dashboard')"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
       <div class="score-card">
@@ -134,7 +144,8 @@
       </div>
       
       <div class="checklist-section" id="checklistContainer">
-        </div>
+        <!-- Akan diisi oleh JavaScript -->
+      </div>
 
       <div class="heart-container">
         <div class="heart-label">Carta Hati (40 Hari)</div>
