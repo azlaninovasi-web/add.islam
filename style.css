@@ -60,7 +60,6 @@ body {
   padding: 35px 22px 40px;
   position: relative;
   overflow: hidden;
-  border-radius: 0 0 32px 32px;
   box-shadow: var(--shadow-md);
 }
 
